@@ -1,0 +1,29 @@
+# -- coding:utf-8 --
+import urllib
+import requests
+from bs4 import BeautifulSoup
+import json
+import time
+import danmu
+def getDanmu(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+        'Referer': 'https://v.youku.com/v_show/id_XMzc1OTA1MjE1Ng==.html?spm=a2h0j.11185381.listitem_page1.5!2~A&&s=69efbfbdefbfbd343a00',
+        'Cookie': '__ysuid=1530761762185ZJ1; __aysid=1535359557832Fci; cna=JITDEzx/jh4CAXPp1CMcPSX8; juid=01clt8v8jn2ptk; __ayft=1535417791643; __ayscnt=1; ycid=0; ykss=f69e845bfeddf4d861df2acd; __utmarea=; referhost=https%3A%2F%2Fv.youku.com; yseid=1535434819347HiPyRd; yseidcount=4; __arycid=cms-00-1519-27244-0; __arcms=cms-00-1519-27244-0; P_ck_ctl=A19B03632D73893CA3D55D12806D936C; seid=01clvomama53j; _m_h5_tk=5deaf485e7c62c2c5c2aa1e306728d70_1535448193318; _m_h5_tk_enc=43aeb61bbbeefd6b9b2e6bcc7e9d8aea; ypvid=1535443153876a4LN0p; ysestep=8; yseidtimeout=1535450353878; ystep=27; __ayvstp=100; __aysvstp=139; isg=BISEchESg_IaVzc49FtNDGJwVQK2NaknSVi9Dp4lc88SySWTxqtXlwooDSG0UeBf; __arpvid=1535443174393WLct9Y-1535443174403; __aypstp=25; __ayspstp=33; seidtimeout=1535444974962'}
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    #print(soup)
+    j = str(soup).split('mtopjsonp1')[-1].strip('()')
+    j = json.loads(j)
+    msg = j['data']['data']['videos']['list']
+    count = len(msg)
+    print("时间较长，每集预计近一分钟，请耐心等待")
+    for x in range(count):
+        print(msg[x]['title']+' vid:'+msg[x]['vid'])
+        vid = msg[x]['vid']
+        title = msg[x]['title']
+        danmu.getUrl(vid,title)
+def main():
+    getDanmu('https://acs.youku.com/h5/mtop.youku.play.ups.appinfo.get/1.1/?jsv=2.4.11&appKey=24679788&t=1535443177416&sign=e50c280dc1fb4cd103e131cc48a09b15&api=mtop.youku.play.ups.appinfo.get&v=1.1&timeout=20000&YKPid=20160317PLF000211&YKLoginRequest=true&AntiFlood=true&AntiCreep=true&type=jsonp&dataType=jsonp&callback=mtopjsonp1&data=%7B%22steal_params%22%3A%22%7B%5C%22ccode%5C%22%3A%5C%220502%5C%22%2C%5C%22client_ip%5C%22%3A%5C%22192.168.1.1%5C%22%2C%5C%22utid%5C%22%3A%5C%22JITDEzx%2Fjh4CAXPp1CMcPSX8%5C%22%2C%5C%22client_ts%5C%22%3A1535443177%2C%5C%22version%5C%22%3A%5C%220.5.68%5C%22%2C%5C%22ckey%5C%22%3A%5C%22110%23KvckAUkfkJ%2Fdja5wgUcUMuy2kMZXmTkQckHOFUK2hQ7%2F8xP54KyzcMdyjwucSltV8MKQ3Kc2hnpfJKapqwcghYWyzG3IzQjx81K1k7umbToEbcrhy%2BaWcuGWx0PNYDvZo3JDfTIijTkiLs4kV6vis9kk4EKQs3gwP444GOsJaBUI1RWLvW%2BwXOT5hyaeDAkiskkkG9kijTcOUtth0Lhis9T4wcDBviC3m%2BC7lLKIj9Tek00JGIyM2pUkDlfq1OuNE%2Bx9WIsHhyGFylmtCYbnnQ7dr8hNd3WWPd60GfI8pmY9k%2B6IuH3yB7p4lOq0JELYDXjfZcQE1o8MDI5qshGhSzjKshKqTsHE3y0euAZMhtqPfHfR9iLjNFApGqOYndLXbcC%2BydDEflDf7N3imVLExLAyXqaK%2Bdn6dmuAamEl7NpC7VNKCmYFjwfV8JbBsH720l55weW2qJE18Bqjlz6YVuM6cpD%2FlagpBxgLfVviLp8RFx11%2B7%2FQaomvivtGzoJpEyv6Ik7XqgkC%2FQJG4nBRKAYNXUnX2ncj7rM0kHzu254T4%2BEYsnzdgbQjNWDW5w55bYtXsziytzeBHlmHhxQWBUqlmTg%2FpyYkeHSgTH2rX2A0Et472NEAlHh70GEXCtEev6ZYtD6tg9V1YEwTuxI2A4T2mlct8LfDrllq5MNN6XKGAOjkv3X%2FABafR%2B8mhCS9oAfQsgYkeD7H9qwhH8bjS2QqxZPK5OMaAU%3D%3D%5C%22%7D%22%2C%22biz_params%22%3A%22%7B%5C%22vid%5C%22%3A%5C%22XMzc1OTA1MjE1Ng%3D%3D%5C%22%2C%5C%22current_showid%5C%22%3A%5C%22317679%5C%22%7D%22%2C%22ad_params%22%3A%22%7B%5C%22site%5C%22%3A1%2C%5C%22wintype%5C%22%3A%5C%22interior%5C%22%2C%5C%22p%5C%22%3A1%2C%5C%22fu%5C%22%3A0%2C%5C%22vs%5C%22%3A%5C%221.0%5C%22%2C%5C%22rst%5C%22%3A%5C%22mp4%5C%22%2C%5C%22dq%5C%22%3A%5C%22flv%5C%22%2C%5C%22os%5C%22%3A%5C%22win%5C%22%2C%5C%22osv%5C%22%3A%5C%22%5C%22%2C%5C%22d%5C%22%3A%5C%220%5C%22%2C%5C%22bt%5C%22%3A%5C%22pc%5C%22%2C%5C%22aw%5C%22%3A%5C%22w%5C%22%2C%5C%22needbf%5C%22%3A1%2C%5C%22atm%5C%22%3A%5C%22%5C%22%7D%22%7D')
+if __name__ == '__main__':
+    main()
